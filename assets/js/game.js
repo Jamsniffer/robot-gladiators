@@ -41,56 +41,76 @@ var fightOrSkip = function() {
 
 var fight = function(enemy) {
 
+    var isPlayerTurn = true;
+
+    if(Math.random() > 0.5) {
+
+        isPlayerTurn = false;
+
+    }
+
     while(enemy.Health > 0 && playerInfo.Health > 0) {
 
-        if(fightOrSkip()) {
+        if(isPlayerTurn) {
 
-            break;
+            if(fightOrSkip()) {
 
+                break;
+    
+            }
+
+        
+
+            var damage = randomNumber(playerInfo.Attack - 3, playerInfo.Attack);
+
+            enemy.Health = Math.max(0, enemy.Health - damage);
+
+            console.log(
+
+                playerInfo.Name + " attacked " + enemy.Name + ". " + enemy.Name + " now has " + enemy.Health + " health remaining."
+
+            );
+
+            if (enemy.Health <= 0) {
+
+                window.alert(enemy.Name + " has died!");
+
+                playerInfo.Money = playerInfo.Money + 20;
+
+                break;
+
+            }else {
+
+                window.alert (enemy.Name + " still has " + enemy.Health + " health left.");
+
+            }
+
+        } else {
+
+            var damage = randomNumber(enemy.Attack - 3, enemy.Attack)
+
+            playerInfo.Health = Math.max(0, playerInfo.Health - enemy.Attack);
+
+            console.log(
+
+                enemy.Name + " attacked " + playerInfo.Name + ". " + playerInfo.Name + " now has " + playerInfo.Health + " health remaining."
+
+            );
+
+            if (playerInfo.Health <= 0) {
+
+                window.alert(playerInfo.Name + " has died!");
+
+                break;
+
+            }else {
+
+                window.alert(playerInfo.Name + " still has " + playerInfo.Health + " health left.");
+            }
         }
 
-        var damage = randomNumber(playerInfo.Attack - 3, playerInfo.Attack);
+        isPlayerTurn = !isPlayerTurn;
 
-        enemy.Health = Math.max(0, enemy.Health - damage);
-
-        console.log(
-
-            playerInfo.Name + " attacked " + enemy.Name + ". " + enemy.Name + " now has " + enemy.Health + " health remaining."
-
-        );
-
-        if (enemy.Health <= 0) {
-
-            window.alert(enemy.Name + " has died!");
-
-            break;
-
-        }else {
-
-            window.alert (enemy.Name + " still has " + enemy.Health + " health left.");
-
-        }
-
-        var damage = randomNumber(enemy.Attack - 3, enemy.Attack)
-
-        playerInfo.Health = Math.max(0, playerInfo.Health - enemy.Attack);
-
-        console.log(
-
-            enemy.Name + " attacked " + playerInfo.Name + ". " + playerInfo.Name + " now has " + playerInfo.Health + " health remaining."
-
-        );
-
-        if (playerInfo.Health <= 0) {
-
-            window.alert(playerInfo.Name + " has died!");
-
-            break;
-
-        }else {
-
-            window.alert(playerInfo.Name + " still has " + playerInfo.Health + " health left.");
-        }
     }
 };
 
@@ -136,15 +156,38 @@ var startGame = function() {
 
 var  endGame = function() {
 
-    if (playerInfo.Health > 0) {
+    window.alert("The game has now ended. Let's see how you did!");
 
-        window.alert("Great job! You've survived the game! You now have a score of " + playerInfo.Money + ".");
+    var highScore = localStorage.getItem("highscore");
 
-    } else {
+    if (highScore === null) {
 
-        window.alert("You've lost your robot in battle.");
+        highscore= 0;
 
     }
+
+    if (playerInfo.Money > highscore) {
+
+        localStorage.setItem("highscore", playerInfo.Money);
+
+        localStorage.setItem("name", playerInfo.Name)
+
+        alert(playerInfo.Name + " now has the high score of " + playerInfo.Money + "!");
+    } else {
+
+        alert(playerInfo.NAme + " did not beat the high score of " +highScore + ". Maybe next time!");
+
+    }
+
+    //if (playerInfo.Health > 0) {
+
+        //window.alert("Great job! You've survived the game! You now have a score of " + playerInfo.Money + ".");
+
+    //} else {
+
+      //  window.alert("You've lost your robot in battle.");
+
+    //}
 
     var playAgainConfirm= window.confirm("Would you like to play again?");
 
